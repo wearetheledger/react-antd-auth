@@ -1,0 +1,94 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  test:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:8.9
+
+    working_directory: ~/circleci-deployment
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      # run tests!
+      - run: yarn test
+
+      - persist_to_workspace:
+          root: .
+          paths: .
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:8.9
+
+    working_directory: ~/circleci-deployment
+
+    steps:
+      - attach_workspace:
+          at: ~/circleci-deployment
+
+      - run:
+          name: set env
+          command: |
+            echo "" > .env
+
+            # set API url
+            echo "API_URL=${API_URL}" >> .env
+
+      - run: yarn build
+
+      - persist_to_workspace:
+          root: .
+          paths: build/*
+
+  deploy:
+    docker:
+      - image: python:3.6.0
+    working_directory: ~/circleci-deployment
+    steps:
+      - attach_workspace:
+          at: ~/circleci-deployment
+      - run:
+          name: install aws-cli
+          command: |
+            pip install --upgrade awscli
+            aws --version
+      - run:
+          name: Deploy to S3 if tests pass and branch is Master
+          command: aws s3 sync ./build s3://${S3_BUCKET_NAME} --delete --cache-control max-age=3600
+
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - test
+      - build:
+          requires:
+            - test
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+
