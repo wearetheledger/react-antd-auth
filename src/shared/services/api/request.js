@@ -8,6 +8,16 @@ const client = axios.create({
     baseURL: API_URL
 });
 
+export const authRequest = options => {
+    return request({
+        ...options,
+        headers: {
+            ...options.headers,
+            Authorization: `Bearer ${localStorage.getItem('id_token')}`
+        }
+    });
+};
+
 /**
  * Request Wrapper with default success/error actions
  */
@@ -35,7 +45,8 @@ const request = function(options) {
         return Promise.reject(error.response || error.message);
     };
 
-    return client(options)
+    return client
+        .request(options)
         .then(onSuccess)
         .catch(onError);
 };

@@ -33,11 +33,24 @@
     display: block;
     margin-top: 10px;
 
+    svg {
+      height: 25px;
+      width: 25px;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
     &:global(.civic) {
       .button-variant-primary(#fff; #3ab03f);
+      svg {
+        fill: white;
+      }
     }
     &:global(.auth0) {
       .button-variant-primary(#fff; #eb5424);
+    }
+    &:global(.itsme) {
+      .button-variant-primary(#fff; #ff4611);
     }
   }
   hr {

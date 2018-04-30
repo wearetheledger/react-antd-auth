@@ -1,25 +1,36 @@
-import * as authService from './authService';
+import * as auth0Service from './auth0Service';
+import * as civicService from './civicService';
 import { AUTH_LOGIN, AUTH_LOGOUT } from './authActionTypes';
-import jwt_decode from 'jwt-decode';
 import { push } from 'react-router-redux';
 import { toastr } from 'react-redux-toastr';
 
 export const init = () => {
     return dispatch => {
-        const accessToken = localStorage.getItem('access_token');
         const idToken = localStorage.getItem('id_token');
 
-        if (accessToken && idToken) {
-            let idTokenPayload = jwt_decode(idToken);
+        if (idToken) {
+            const [service, token] = idToken.split(':');
+
+            let idTokenPayload;
+
+            switch (service) {
+                case 'auth0':
+                    idTokenPayload = auth0Service.getPayload(token);
+                    break;
+                case 'civic':
+                    idTokenPayload = civicService.getPayload(token);
+                    break;
+                default:
+                    throw new Error('Not implemented');
+            }
 
             if (new Date().getTime() > new Date(idTokenPayload.exp * 1000)) {
-                authService.logout();
+                auth0Service.logout();
             } else {
                 dispatch({
                     type: AUTH_LOGIN,
                     payload: {
                         idToken,
-                        accessToken,
                         idTokenPayload
                     }
                 });
@@ -28,16 +39,24 @@ export const init = () => {
     };
 };
 
-export const login = () => {
-    return dispatch => authService.login();
+export const login = service => {
+    return dispatch => {
+        switch (service) {
+            case 'auth0':
+                return dispatch(auth0Service.login());
+            case 'civic':
+                return dispatch(civicService.login());
+            default:
+                throw new Error('Not implemented');
+        }
+    };
 };
 
 export const handleCallback = () => {
-    console.log('handle callback');
     return dispatch => {
         dispatch({
             type: AUTH_LOGIN,
-            payload: authService.handleAuthentication()
+            payload: auth0Service.handleAuthentication()
         })
             .then(() => {
                 dispatch(push('/'));
@@ -52,8 +71,12 @@ export const handleCallback = () => {
 
 export function logout() {
     return dispatch => {
-        authService.logout();
+        localStorage.removeItem('id_token');
         dispatch({ type: AUTH_LOGOUT });
         dispatch(push('/'));
     };
 }
+
+export const setSession = (service, idToken) => {
+    localStorage.setItem('id_token', `${service}:${idToken}`);
+};

@@ -1,43 +1,17 @@
 import request from './request';
 
-function register({ privateKey, publicKey, metadata }) {
+function getUserData({ token }) {
     return request({
-        url: `/auth/register`,
+        url: `/auth/civic`,
         method: 'POST',
         data: {
-            privateKey,
-            publicKey,
-            metadata
-        }
-    });
-}
-
-function login({ privateKey, publicKey }) {
-    return request({
-        url: '/auth/login',
-        method: 'POST',
-        data: {
-            privateKey,
-            publicKey
-        }
-    });
-}
-
-function logout({ privateKey, publicKey }) {
-    return request({
-        url: '/auth/logout',
-        method: 'POST',
-        data: {
-            privateKey,
-            publicKey
+            token
         }
     });
 }
 
 const AuthService = {
-    register,
-    login,
-    logout
+    getUserData
 };
 
 export default AuthService;

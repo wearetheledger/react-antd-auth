@@ -15,7 +15,7 @@ const Auth = ({ children }) => (
             sm={16}
             xs={20}
             className={styles.authWrapper}>
-            <div className={cn('f2f_logo', styles.logo)}>
+            <div className={cn('tl_logo', styles.logo)}>
                 <img src={logo} alt="barn logo" />
                 <h1>React boilerplate</h1>
             </div>
