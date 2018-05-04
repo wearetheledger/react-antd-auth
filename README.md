@@ -1,10 +1,10 @@
-# Farm2Fork Dashboard
+# React, Ant Design and authentication boilerplate
 
 ## Installation
 
 ```bash
-git clone https://github.com/notrab/create-react-app-redux.git
-cd create-react-app-redux
+git clone https://github.com/wearetheledger/react-antd-auth.git
+cd react-antd-auth
 yarn
 ```
 
