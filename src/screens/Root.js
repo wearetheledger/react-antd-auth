@@ -48,6 +48,7 @@ class Root extends React.Component {
 
     render() {
         const { user, logout } = this.props;
+
         return (
             <Layout hasSider className="height-100">
                 <UISidebarDrawerMenu

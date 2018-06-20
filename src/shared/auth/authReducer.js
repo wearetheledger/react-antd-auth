@@ -1,5 +1,5 @@
 import { AUTH_LOADING, AUTH_LOGIN, AUTH_LOGOUT } from './authActionTypes';
-import { onSuccess } from '../reduxMiddlewareHelper';
+import { onLoading, onSuccess } from '../reduxMiddlewareHelper';
 
 const initalState = {
     loading: false,
@@ -9,13 +9,14 @@ const initalState = {
         sub: null
     },
     jwtToken: null,
-    accessToken: null
+    service: null
 };
 
 export default function(state = initalState, action) {
     const { payload } = action;
 
     switch (action.type) {
+        case onLoading(AUTH_LOGIN):
         case AUTH_LOADING:
             return {
                 ...state,
@@ -28,8 +29,8 @@ export default function(state = initalState, action) {
                 loading: false,
                 authenticated: true,
                 jwtToken: payload.idToken,
-                accessToken: payload.accessToken,
-                user: payload.idTokenPayload
+                user: payload.idTokenPayload,
+                service: payload.service
             };
         case AUTH_LOGOUT:
             return initalState;

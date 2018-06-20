@@ -28,7 +28,7 @@ class UISidebar extends React.Component {
                 collapsed={collapsed}
                 trigger={null}
                 onCollapse={toggleCollapse}>
-                <div className={cn('f2f_logo', styles.sidebar_logo)}>
+                <div className={cn('tl_logo', styles.sidebar_logo)}>
                     <img src={logo} alt="barn logo" />
                     <h1>React boilerplate</h1>
                 </div>
