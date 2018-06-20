@@ -39,3 +39,5 @@ export const handleAuthentication = () => {
 export const getPayload = token => {
     return jwt_decode(token);
 };
+
+export const logout = () => {};

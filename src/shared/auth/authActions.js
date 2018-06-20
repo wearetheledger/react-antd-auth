@@ -24,6 +24,20 @@ export const init = () => {
                     throw new Error('Not implemented');
             }
 
+            let idTokenPayload;
+
+            switch (service) {
+                case 'auth0':
+                    idTokenPayload = auth0Service.getPayload(token);
+                    break;
+                case 'civic':
+                    idTokenPayload = civicService.getPayload(token);
+                    break;
+                default:
+                    localStorage.removeItem('id_token');
+                    throw new Error('Not implemented');
+            }
+
             if (new Date().getTime() > new Date(idTokenPayload.exp * 1000)) {
                 auth0Service.logout();
             } else {

@@ -6,7 +6,11 @@ import { setSession } from './authActions';
 import { CIVIC_APP_ID } from '@env';
 import jwt_decode from 'jwt-decode';
 
-const civicSip = new window.civic.sip({ appId: CIVIC_APP_ID });
+let civicSip = {};
+
+if (CIVIC_APP_ID) {
+    civicSip = new window.civic.sip({ appId: CIVIC_APP_ID });
+}
 
 export const login = () => {
     return dispatch => {
