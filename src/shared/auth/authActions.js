@@ -10,20 +10,7 @@ export const init = () => {
 
         if (idToken) {
             const [service, token] = idToken.split(':');
-
-            let idTokenPayload;
-
-            switch (service) {
-                case 'auth0':
-                    idTokenPayload = auth0Service.getPayload(token);
-                    break;
-                case 'civic':
-                    idTokenPayload = civicService.getPayload(token);
-                    break;
-                default:
-                    throw new Error('Not implemented');
-            }
-
+            
             let idTokenPayload;
 
             switch (service) {
