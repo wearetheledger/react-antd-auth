@@ -1,17 +1,10 @@
 import { Form } from 'antd';
 import React from 'react';
-import * as bip39 from 'bip39';
 import AuthRegister from '../../../components/Auth/Register';
 import { connect } from 'react-redux';
 import { register } from '../../../shared/auth/authActions';
 
 class ScreensAuthRegister extends React.PureComponent {
-    generatePassPhrase = () => {
-        this.props.form.setFieldsValue({
-            passphrase: bip39.generateMnemonic()
-        });
-    };
-
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -31,7 +24,7 @@ class ScreensAuthRegister extends React.PureComponent {
                 getFieldDecorator={getFieldDecorator}
                 generatePassPhrase={this.generatePassPhrase}
                 handleSubmit={this.handleSubmit}
-                initialValue={bip39.generateMnemonic()}
+                initialValue={''}
             />
         );
     }
